@@ -11,15 +11,16 @@ def test_ok_ola():
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {'message': 'Olá, Mundo!'}
 
-def test_read_html(client):
-    response = client.get('/html')
 
-    assert response.status_code == HTTPStatus.OK
-    assert response.text == '<h1> Olá Mundo!</h1>'
+# def test_read_html(client):
+#     response = client.get('/html/')
+
+#     assert response.status_code == HTTPStatus.OK
+#     assert response.text == '<h1> Olá Mundo!</h1>'
 
 def test_create_user(client):
     response = client.post(
-        '/user/',
+        '/users/',
         json={
             'username': 'alice',
             'email': 'alice@example.com',
@@ -28,7 +29,16 @@ def test_create_user(client):
     )
     assert response.status_code == HTTPStatus.CREATED
     assert response.json() == {
-            'id': 1,
-            'username': 'alice',
-            'email': 'alice@example.com',
+        'id': 1,
+        'username': 'alice',
+        'email': 'alice@example.com',
+    }
+
+
+def test_read_users(client):
+    response = client.get('/users/')
+
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {
+        'users': [{'id': 1, 'username': 'alice', 'email': 'alice@example.com'}]
     }

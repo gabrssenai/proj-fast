@@ -49,7 +49,7 @@ def delete_user(user_id: int):
             detail='User not found',
         )
     del database[user_id - 1]
-    return{'message': "User deleted"}
+    return {'message': 'User deleted'}
 
 
 @app.get(

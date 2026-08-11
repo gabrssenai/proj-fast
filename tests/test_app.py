@@ -18,6 +18,7 @@ def test_ok_ola():
 #     assert response.status_code == HTTPStatus.OK
 #     assert response.text == '<h1> Olá Mundo!</h1>'
 
+
 def test_create_user(client):
     response = client.post(
         '/users/',
@@ -41,4 +42,21 @@ def test_read_users(client):
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {
         'users': [{'id': 1, 'username': 'alice', 'email': 'alice@example.com'}]
+    }
+
+
+def test_update_user(client):
+    response = client.put(
+        '/users/1',
+        json={
+            'username': 'bob',
+            'email': 'bob@example.com',
+            'password': 'mynewpassword',
+        },
+    )
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {
+        'id': 1,
+        'username': 'bob',
+        'email': 'bob@example.com',
     }

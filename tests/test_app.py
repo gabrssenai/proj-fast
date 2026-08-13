@@ -70,17 +70,16 @@ def test_delete_user(client):
             'email': 'alice@example.com',
             'password': 'secret',
         },
-    )    
+    )
     response = client.delete('/users/1')
 
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {'message': 'User deleted'}
 
-#uv run pytest tests/test_app.py::test_delete_user_not_found -vv
-def test_delete_user_not_found(client): 
+
+# uv run pytest tests/test_app.py::test_delete_user_not_found -vv
+def test_delete_user_not_found(client):
     response = client.delete('/users/999')
 
     assert response.status_code == HTTPStatus.NOT_FOUND
-    assert response.json() == {
-        'detail': 'User not found'
-    }
+    assert response.json() == {'detail': 'User not found'}

@@ -1,12 +1,13 @@
 from http import HTTPStatus
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
+from sqlalchemy.orm import Session
 
+from proj_fast.database import get_session
+from proj_fast.models import User
 from proj_fast.schemas import Message, UserDB, UserList, UserPublic, UserSchema
 
 app = FastAPI()
-
-database: list[UserDB] = []
 
 
 @app.post(
@@ -14,10 +15,19 @@ database: list[UserDB] = []
     status_code=HTTPStatus.CREATED,
     response_model=UserPublic,
 )
-def create_user(user: UserSchema):
-    user_with_id = UserDB(**user.model_dump(), id=len(database) + 1)
-    database.append(user_with_id)
-    return user_with_id
+def create_user(
+    user: UserSchema,
+    session: Session = Depends(get_session)
+    ):
+    db_user = User(
+        username=user.name,
+        password=user.password,
+        email=user.email,
+    )
+    session.add(db_user)
+    session.commit()
+    session.refresh(db_user)
+    return db_user
 
 
 @app.put(

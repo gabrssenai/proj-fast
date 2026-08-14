@@ -10,6 +10,8 @@ from proj_fast.schemas import Message, UserDB, UserList, UserPublic, UserSchema
 app = FastAPI()
 
 
+database: list[UserDB] = []
+
 @app.post(
     '/users/',
     status_code=HTTPStatus.CREATED,

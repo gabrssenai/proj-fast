@@ -55,8 +55,8 @@ def update_user(
     db_user.username = user.username
     db_user.email = user.email
     db_user.password = user.password
-    db_user.commit()
-    db_user.refresh(db_user)
+    session.commit()
+    session.refresh(db_user)
     return db_user
 
 

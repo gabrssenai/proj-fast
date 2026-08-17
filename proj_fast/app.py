@@ -3,6 +3,8 @@ from http import HTTPStatus
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
+from sqlalchemy import select
+
 from proj_fast.database import get_session
 from proj_fast.models import User
 from proj_fast.schemas import Message, UserDB, UserList, UserPublic, UserSchema
@@ -68,8 +70,9 @@ def delete_user(user_id: int):
     '/users/',
     response_model=UserList,
 )
-def read_users():
-    return {'users': database}
+def read_users(session: Session = Depends(get_session)):
+    users = session.scalars(select(User)).all()
+    return {'users': users}
 
 
 @app.get(

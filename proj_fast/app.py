@@ -25,15 +25,22 @@ def create_user(
     session: Session = Depends(get_session)
     ):
     db_user = User(
-        username=user.name,
+        username=user.username,
         password=user.password,
         email=user.email,
     )
-    session.add(db_user)
-    session.commit()
-    session.refresh(db_user)
-    return db_user
+    try:
+        session.add(db_user)
+        session.commit()
+        session.refresh(db_user)
 
+    except IntegrityError:
+        session.rollback()
+        raise HTTPException(
+            status_code=HTTPStatus.CONFLICT,
+            detail='Username or email already exists'
+        )
+    return db_user
 
 @app.put(
     '/users/{user_id}',
@@ -72,13 +79,20 @@ def update_user(
     '/users/{user_id}',
     response_model=Message,
 )
-def delete_user(user_id: int):
-    if user_id > len(database) or user_id < 1:
+def delete_user(
+    user_id: int, 
+    session: Session = Depends(get_session)
+    ):
+    db_user = session.scalar(
+        select(User).where(User.id == user_id)
+        )
+    if not db_user:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
             detail='User not found',
         )
-    del database[user_id - 1]
+    session.delete(db_user)
+    session.commit()
     return {'message': 'User deleted'}
 
 

@@ -52,3 +52,6 @@ class InterestPublic(InterestSchema):
     model_config = ConfigDict(
         from_attributes=True,
     )
+
+class InterestList(BaseModel):
+    interests: list[InterestPublic]

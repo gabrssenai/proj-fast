@@ -4,10 +4,20 @@ from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
 
 from proj_fast.database import get_session
 from proj_fast.models import User
-from proj_fast.schemas import Message, UserDB, UserList, UserPublic, UserSchema
+from proj_fast.schemas import (
+    InterestList,
+    InterestPublic,
+    InterestSchema,
+    Message, 
+    UserDB, 
+    UserList, 
+    UserPublic, 
+    UserSchema,
+)
 
 app = FastAPI()
 

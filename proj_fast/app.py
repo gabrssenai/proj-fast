@@ -12,6 +12,7 @@ from proj_fast.schemas import (
     InterestList,
     InterestPublic,
     InterestSchema,
+    Interest,
     Message, 
     UserDB, 
     UserList, 
@@ -35,21 +36,35 @@ app.add_middleware(
 )
 
 @app.post(
- '/interests/',
- status_code=HTTPStatus.CREATED,
- response_model=InterestPublic,
+    '/interests/',
+    status_code=HTTPStatus.CREATED,
+    response_model=InterestPublic,
 )
 def create_interest(
     interest: InterestSchema,
     session: Session = Depends(get_session),
 ):
-    db_interest = InterestSchema(
+    db_interest = Interest(
     **interest.model_dump()
     )
     session.add(db_interest)
     session.commit()
     session.refresh(db_interest)
     return db_interest
+
+
+@app.get(
+    '/interests/',
+    response_model=InterestList,
+)
+def read_interests(
+    session: Session = Depends(get_session),
+):
+    interests = session.scalars(
+        select(Interest)
+    ).all()
+    return {'interests': interests}
+
 
 @app.post(
     '/users/',

@@ -1,4 +1,5 @@
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from datetime import datetime
 
 
 class Message(BaseModel):
@@ -24,3 +25,20 @@ class UserDB(UserSchema):
 
 class UserList(BaseModel):
     users: list[UserPublic]
+
+
+class InterestSchema(BaseModel):
+    nome: str = Field(
+    min_length=2,
+    max_length=100,
+    )
+    email: EmailStr
+    cidade: str = Field(
+    min_length=2,
+    max_length=100,
+    )
+    veiculo_id: int = Field(gt=0)
+    veiculo_modelo: str = Field(
+    min_length=2,
+    max_length=100,
+    )

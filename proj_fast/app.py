@@ -34,6 +34,22 @@ app.add_middleware(
     allow_headers=['Content-Type'],
 )
 
+@app.post(
+ '/interests/',
+ status_code=HTTPStatus.CREATED,
+ response_model=InterestPublic,
+)
+def create_interest(
+    interest: InterestSchema,
+    session: Session = Depends(get_session),
+):
+    db_interest = InterestSchema(
+    **interest.model_dump()
+    )
+    session.add(db_interest)
+    session.commit()
+    session.refresh(db_interest)
+    return db_interest
 
 @app.post(
     '/users/',

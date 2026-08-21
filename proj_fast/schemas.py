@@ -42,3 +42,13 @@ class InterestSchema(BaseModel):
     min_length=2,
     max_length=100,
     )
+
+
+class InterestPublic(InterestSchema):
+    id: int
+    status: str
+    created_at: datetime
+
+    model_config = ConfigDict(
+        from_attributes=True,
+    )
